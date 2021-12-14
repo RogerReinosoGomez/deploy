@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const usuarioSchema = new Schema({
     cedula: {
-        type: String,
+        type: Number,
         max: [20, 'La longitud del campo supera lo permitido (10)'],
         required: [true, 'La cedula es obligatoria.']
     },
