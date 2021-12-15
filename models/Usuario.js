@@ -44,7 +44,7 @@ const usuarioSchema = new Schema({
         default: true
     },
     nacimiento: {
-        type: String,
+        type: Date,
         required: [true, 'La fecha de nacimiento es obligatoria.']
     }
 },
