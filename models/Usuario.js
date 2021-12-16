@@ -1,8 +1,10 @@
 const { Schema, model } = require('mongoose');
+const { hash, genSalt, compare } = require('bcrypt');
 
 const usuarioSchema = new Schema({
     cedula: {
         type: Number,
+        unique: true,
         max: [20, 'La longitud del campo supera lo permitido (10)'],
         required: [true, 'La cedula es obligatoria.']
     },
@@ -36,12 +38,19 @@ const usuarioSchema = new Schema({
     },
     password: {
         type: String,
-        max: [250, 'La longitud del campo supera lo permitido (250)'],
         required: [true, 'La contraseña es obligatoria.']
     },
     status: {
         type: Boolean,
         default: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    rol: {
+        type: String,
+        required: [true, 'Seleccione un rol']
     },
     nacimiento: {
         type: Date,
@@ -51,5 +60,17 @@ const usuarioSchema = new Schema({
 {
     collection: 'Usuarios'
 });
+
+usuarioSchema.pre('save', async function (next) {
+    console.log('Encriptando password...');
+    const salt = await genSalt(parseInt(process.env.BCRYPT_ROUNDS));
+    this.password =  await hash(this.password, salt);
+    next();
+});
+
+usuarioSchema.methods.compararPassword = async function(textoPassword) {
+    console.log("Comparando passwords...");
+    return await compare(textoPassword, this.password);
+}
 
 exports.Usuario = model('Usuario', usuarioSchema);
