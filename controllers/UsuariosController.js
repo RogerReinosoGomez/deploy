@@ -1,5 +1,6 @@
 const express = require('express');
 const { Usuario } = require('../models/Usuario');
+const { validarUsuario } = require('../utils/authUtils');
 
 const router = express.Router();
 
@@ -14,12 +15,12 @@ router.get('/usuariosregistrados', async (request, response) => {
     }
 });
 
-router.post('/registrar/usuario', async (request, response) => {
+router.post('/registrar', async (request, response) => {
     const usuario = new Usuario(request.body);
     try {
         await usuario.save();
         response.send({
-                        "login": usuario.login,
+                        "cedula": usuario.cedula,
                         "mensaje" :"Usuario registrado con exito."
                     });
     }catch (error) {
@@ -29,6 +30,19 @@ router.post('/registrar/usuario', async (request, response) => {
 });
 
 //Autenticación de usuarios (al hacer login).
-
+router.post('/auth', async (request, response) => {
+    try {
+        const { tokenRefresco, tokenAcceso } = await validarUsuario(request.body);
+        console.log("Iniciando sesion.")
+        response.cookie('RTC',tokenRefresco, { httpOnly: true })
+                .json({
+                        token: tokenAcceso
+                });
+    } catch (error) {
+        console.log("Error al intentar iniciar sesión: ");
+        console.log(error);
+        response.status(403).send("Nombre de usuario o contraseña incorrecta.");
+    }
+});
 
 module.exports = router;

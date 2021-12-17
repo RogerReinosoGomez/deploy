@@ -5,7 +5,6 @@ const usuarioSchema = new Schema({
     cedula: {
         type: Number,
         unique: true,
-        max: [20, 'La longitud del campo supera lo permitido (10)'],
         required: [true, 'La cedula es obligatoria.']
     },
     nombre: {
@@ -53,17 +52,18 @@ const usuarioSchema = new Schema({
         required: [true, 'Seleccione un rol']
     },
     nacimiento: {
-        type: Date,
+        type: String,
         required: [true, 'La fecha de nacimiento es obligatoria.']
     }
 },
 {
-    collection: 'Usuarios'
+    collection: 'Usuarios',
+    versionKey: false
 });
 
 usuarioSchema.pre('save', async function (next) {
     console.log('Encriptando password...');
-    const salt = await genSalt(parseInt(process.env.BCRYPT_ROUNDS));
+    const salt = await genSalt(Number(process.env.BCRYPT_ROUNDS));
     this.password =  await hash(this.password, salt);
     next();
 });
