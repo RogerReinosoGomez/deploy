@@ -1,10 +1,11 @@
 const express = require('express');
+const { secureHaribo } = require('../middlewares/auth');
 const { Usuario } = require('../models/Usuario');
 const { validarUsuario } = require('../utils/authUtils');
 
 const router = express.Router();
 
-router.get('/usuariosregistrados', async (request, response) => {
+router.get('/usuariosregistrados', secureHaribo, async (request, response) => {
     console.log("Listado de usuarios.");
     try {
         const datos = await Usuario.find().exec();
@@ -15,7 +16,7 @@ router.get('/usuariosregistrados', async (request, response) => {
     }
 });
 
-router.post('/registrar', async (request, response) => {
+router.post('/registrar', secureHaribo, async (request, response) => {
     const usuario = new Usuario(request.body);
     try {
         await usuario.save();

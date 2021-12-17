@@ -26,7 +26,7 @@ const getTokenPair = async (usuario) => {
                         });
 
     console.log("Tokens generados.");
-    console.log({ tokenRefresco, tokenAcceso });
+    /*console.log({ tokenRefresco, tokenAcceso });*/
 
     return { tokenRefresco, tokenAcceso };
 }
