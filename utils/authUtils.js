@@ -11,7 +11,7 @@ const getTokenPair = async (usuario) => {
                         },
                         process.env.JWT_ACCESS_SECRET,
                         {
-                            expiresIn: '5m'
+                            expiresIn: '15m'
                         });
     const tokenRefresco = await sign(
                         {
