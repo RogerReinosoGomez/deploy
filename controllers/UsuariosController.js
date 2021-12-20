@@ -22,7 +22,6 @@ router.post('/registrar', secureHaribo, async (request, response) => {
     console.log("Iniciando el proceso de registro.");
     try {
         const usuario = await Usuario.findOne({ cedula: request.body.cedula }).exec();
-        console.log(usuario);
         if (!usuario) {
             console.log(`Registrando al usuario ${ request.body.nombre } con CC No. ${ request.body.cedula }.`);
             const usuario = new Usuario(request.body);
